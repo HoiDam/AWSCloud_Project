@@ -12,8 +12,8 @@ def connectDB():
     return db
 
 def genSpeedTick():
-    speed = 10 + 5* random.randint(1,10)
-    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    speed = 10 + 5* random.randint(1,20)
+    timestamp = int(time.time())
     # print(timestamp)
     return (speed, timestamp)
 
@@ -36,7 +36,12 @@ def getDriverList():
         sql = "SELECT driverID FROM driver_list"
         cursor.execute(sql)
         result = cursor.fetchall()
-        return jsonify(result)
+        
+        parsed = []
+        for r in result:
+            parsed.append(r[0])
+            
+        return jsonify(parsed)
     except Exception as e:
         print(e)
         pass
@@ -60,7 +65,7 @@ def getSpeedHistory(driverID):
     try:
         db = connectDB()
         cursor = db.cursor()
-        sql = "SELECT speed, ctime FROM real_time_monitoring WHERE driverID = %s"
+        sql = "SELECT ctime, speed FROM real_time_monitoring WHERE driverID = %s"
         cursor.execute(sql, (driverID))
         result = cursor.fetchall()
         return jsonify(result)
