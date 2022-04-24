@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -21,6 +21,9 @@ function Monitor(){
     const [driverList,setDriverList] = useState([]);
     const [dataset,setDataset] = useState({});
     const [currentSpeed,setCurrentSpeed] = useState({});
+    const [overspeed,setOverspeed] = useState(1);
+
+    const [updated,setUpdated] = useState(0);
 
     let requestOptions = {
         method: 'GET'        
@@ -34,40 +37,51 @@ function Monitor(){
                 let driDict = dataset
                 driDict[result[i]] = []
                 // console.log(driverID)
-                setDataset(driDict)
+                setDataset({...driDict})
                 let speedDict = currentSpeed
                 speedDict[result[i]] = 0
-                setCurrentSpeed(speedDict)
+                setCurrentSpeed({...speedDict})
             }
         })
+        fetch("https://x5do3lvlbc.execute-api.us-east-1.amazonaws.com/getOverspeedThreshold", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            setOverspeed(result["overspeedThreshold"])
+        })
+
+    }
+    
+    async function updateDatabase(){
+        let driDict = dataset
+        let speedDict = currentSpeed
+        for (let i = 0; i<driverList.length; i++){
+            var url = "https://x5do3lvlbc.execute-api.us-east-1.amazonaws.com/insertSpeedTick/"+driverList[i]
+            await fetch(url, requestOptions)
+                .then(response => response.json())
+            var driverID = driverList[i]
+            var url = "https://x5do3lvlbc.execute-api.us-east-1.amazonaws.com/getSpeedHistory/"+driverID
+            await fetch(url, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    driDict[driverID] = result
+                    speedDict[driverID] = result[result.length-1][1]
+                })
+        }
+        setCurrentSpeed({...speedDict})
+        setDataset({...driDict})
+        setUpdated(updated+1)
+        console.log("Updated",updated)
     }
     
     useEffect(() => {
-        dummy()
-        const insert_interval = setInterval(async() => {
-            for (let i = 0; i<driverList.length; i++){
-                var url = "https://x5do3lvlbc.execute-api.us-east-1.amazonaws.com/insertSpeedTick/"+driverList[i]
-                await fetch(url, requestOptions)
-                    .then(response => response.json())
-                    .catch(error => console.log('error', error)); 
-                var driverID = driverList[i]
-                var url = "https://x5do3lvlbc.execute-api.us-east-1.amazonaws.com/getSpeedHistory/"+driverID
-                await fetch(url, requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
-                        let driDict = dataset
-                        driDict[driverID] = result
-                        setDataset({...driDict})
-                        let speedDict = currentSpeed
-                        speedDict[driverID] = result[result.length-1][1]
-                        setCurrentSpeed({...speedDict})
-                        console.log("Updated")
-                    })
-                    .catch(error => console.log('error', error));
-            }
-            }, 1000);
-        return () => {clearInterval(insert_interval)}
-      },[]);
+        if (updated == 0){
+            dummy()
+        }
+        const interval = setInterval(async() => {
+            updateDatabase()
+        }, 3000);
+        return () => {clearInterval(interval)}
+    },[updated]);
       
 
     return (
@@ -81,16 +95,23 @@ function Monitor(){
                             <div>
                                 <Grid>
                                     <Item xs={12}>
+                                        {currentSpeed[driverID] >= overspeed ? 
+                                        <Typography variant="body1" style={{color: 'red'}}>
+                                            <b>{driverID}</b> Current Speed: {currentSpeed[driverID]} (OVERSPEEDING)
+                                        </Typography>
+                                        :
                                         <Typography variant="body1">
                                             <b>{driverID}</b> Current Speed: {currentSpeed[driverID]}
                                         </Typography>
+                                        }
+                                        
                                     </Item>
                                 </Grid>
                                 <Grid>
                                     <Item xs={12}>
-                                        <Chart data={dataset[driverID]}></Chart>
+                                        <Chart data={dataset[driverID]} driverID={driverID}></Chart>
                                     </Item>
-                                </Grid>
+                                </Grid> 
                             </div>
                         }
                     </div>

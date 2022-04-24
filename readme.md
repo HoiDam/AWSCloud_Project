@@ -2,6 +2,6 @@
 
 ##  Cloud infrastructure
 
-![cloud_infra](https://media.discordapp.net/attachments/849959320623644743/964148633660428359/unknown.png?width=701&height=497)
+![cloud_infra](https://cdn.discordapp.com/attachments/849959320623644743/967690606988120104/unknown.png)
 
 ## TBA

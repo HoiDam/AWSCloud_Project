@@ -6,7 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 function Chart(props) {
     const options = {
         title: {
-          text: 'Chart'
+          text: props.driverID + "  Real Time Monitoring"
         },
         series: [
           {

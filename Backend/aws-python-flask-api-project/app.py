@@ -12,7 +12,7 @@ def connectDB():
     return db
 
 def genSpeedTick():
-    speed = 10 + 5* random.randint(1,20)
+    speed = 10 + 10* random.randint(1,20)
     timestamp = int(time.time())
     # print(timestamp)
     return (speed, timestamp)
@@ -73,6 +73,14 @@ def getSpeedHistory(driverID):
         print(e)
         pass   
 
+@app.route('/getOverspeedThreshold', methods=['GET'])
+def getOverspeedThreshold():
+    try:
+        result = {"overspeedThreshold": "120"}
+        return jsonify(result)
+    except Exception as e:
+        print(e)
+        pass
 
 @app.errorhandler(404)
 def resource_not_found(e):

@@ -58,52 +58,52 @@ for k in range(len(new_list)):
         neutral_sliding = subsetdf['neutralSlideTime'].value_counts().tolist()
         neutral_time = neutral_sliding[1]
 
-print("Car Plate No. : " + str(wanted_plate))
-print("Driver ID: " + str(driverid[1]))
-print("Frequency of ...")
-print("- Neutral Sliding : " + str(math.ceil((neu_start[1]+neu_end[1])/2)))
-print("- Acceleration : " + str(rapid))
-print("- OverSpeeding : " + str(over))
-print("- Fatigue Driving : " + str(fati))
-print("- Oil Leakage : " + str(leak))
-print("- Throttle Stop : " + str(throttle_stop))
+# print("Car Plate No. : " + str(wanted_plate))
+# print("Driver ID: " + str(driverid[1]))
+# print("Frequency of ...")
+# print("- Neutral Sliding : " + str(math.ceil((neu_start[1]+neu_end[1])/2)))
+# print("- Acceleration : " + str(rapid))
+# print("- OverSpeeding : " + str(over))
+# print("- Fatigue Driving : " + str(fati))
+# print("- Oil Leakage : " + str(leak))
+# print("- Throttle Stop : " + str(throttle_stop))
 
-print("Cumulative time of ...")
-print("- Over speeding: " + str(overspeed) + "s")
-print("- Neutral slide : " + str(neutral_time) + "s")
+# print("Cumulative time of ...")
+# print("- Over speeding: " + str(overspeed) + "s")
+# print("- Neutral slide : " + str(neutral_time) + "s")
 
-@app.route('/throttle', methods=['GET'])
-def throttle():
-    return str(throttle_stop)
+# @app.route('/throttle', methods=['GET'])
+# def throttle():
+#     return str(throttle_stop)
 
-@app.route('/overspeedtime', methods=['GET'])
-def overspeedtime():
-    return str(overspeed)
+# @app.route('/overspeedtime', methods=['GET'])
+# def overspeedtime():
+#     return str(overspeed)
 
-@app.route('/oil', methods=['GET'])
-def oil_leakage():
-    return str(leak)
+# @app.route('/oil', methods=['GET'])
+# def oil_leakage():
+#     return str(leak)
 
-@app.route('/rapid', methods=['GET'])
-def rapid_speeding():
-    return str(rapid)
+# @app.route('/rapid', methods=['GET'])
+# def rapid_speeding():
+#     return str(rapid)
 
-@app.route('/fatigue', methods=['GET'])
-def fatigue_driving():
-    return str(fati)
+# @app.route('/fatigue', methods=['GET'])
+# def fatigue_driving():
+#     return str(fati)
 
-@app.route('/neutral', methods=['GET'])
-def neutral():
-    return str(math.ceil((neu_start[1]+neu_end[1])/2))
+# @app.route('/neutral', methods=['GET'])
+# def neutral():
+#     return str(math.ceil((neu_start[1]+neu_end[1])/2))
 
-@app.route('/overspeed', methods=['GET'])
-def overspeed():
-    return str(over)
+# @app.route('/overspeed', methods=['GET'])
+# def overspeed():
+#     return str(over)
 
-@app.route('/neutral_time', methods=['GET'])
-def neutral_time():
-    return str(neutral_time)
+# @app.route('/neutral_time', methods=['GET'])
+# def neutral_time():
+#     return str(neutral_time)
 
-@app.route('/driver_id', methods=['GET'])
-def driver_id():
-    return str(driver_id)
+# @app.route('/driver_id', methods=['GET'])
+# def driver_id():
+#     return str(driver_id)
